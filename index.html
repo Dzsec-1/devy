@@ -1,108 +1,66 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>🎂 Joyeux Anniversaire 🎂</title>
+  <meta charset="UTF-8" />
+  <title>Joyeux anniversaire !</title>
   <style>
     body {
       margin: 0;
-      padding: 0;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: Arial, sans-serif;
-      background: linear-gradient(135deg, #3a7bd5, #00d2ff); /* arrière-plan par défaut */
+      font-family: sans-serif;
+      background: linear-gradient(135deg, #3a7bd5, #00d2ff);
       color: white;
-      overflow: hidden;
-      transition: background 1.5s ease-in-out; /* effet doux */
-    }
-
-    .container, .anniversaire {
       text-align: center;
-      background: rgba(0,0,0,0.5);
-      padding: 40px;
-      border-radius: 15px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-      max-width: 900px;
+      padding: 20px;
     }
-
-    input, button {
-      padding: 12px;
-      font-size: 16px;
-      border-radius: 8px;
-      border: none;
-      margin-top: 10px;
+    .hidden {
+      display: none;
     }
-    button { background: #ffcc00; cursor: pointer; font-weight: bold; }
-    button:hover { background: #ffaa00; }
-
-    .error { margin-top: 15px; color: #ffdddd; font-style: italic; }
-    .hidden { display: none; }
-
-    h1 { font-size: 3em; margin-bottom: 20px; }
-
-    /* GIFs */
-    .gif-animation {
-      position: absolute;
-      width: 200px;
-      z-index: 10;
-      pointer-events: none;
-    }
-    .gif-left { top: 50px; left: 20px; }
-    .gif-right { bottom: 50px; right: 20px; }
-
-    /* Cœurs */
     .heart {
       position: absolute;
-      background-color: rgba(255,0,0,0.8);
+      background: red;
+      width: 15px;
+      height: 15px;
       transform: rotate(45deg);
-      animation: fall 5s linear infinite;
+      animation: float 5s linear infinite;
     }
-    .heart::before, .heart::after {
-      content: '';
+    .heart::before,
+    .heart::after {
+      content: "";
       position: absolute;
-      background-color: rgba(255,0,0,0.8);
+      width: 15px;
+      height: 15px;
+      background: red;
       border-radius: 50%;
     }
-    .heart::before { top: -50%; left: 0; width: 100%; height: 100%; }
-    .heart::after { top: 0; left: 50%; width: 100%; height: 100%; }
-    @keyframes fall {
-      0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+    .heart::before {
+      top: -7.5px;
+      left: 0;
+    }
+    .heart::after {
+      top: 0;
+      left: -7.5px;
+    }
+    @keyframes float {
+      0% { top: 100vh; opacity: 1; }
+      100% { top: -10vh; opacity: 0; }
     }
   </style>
 </head>
 <body>
-  <!-- Musique continue -->
-  <audio id="birthdayMusic" 
-         src="musique_anniversaire.mp3" 
-         preload="auto" loop></audio> 
-
-  <!-- PAGE 1 : entrée du prénom -->
-  <div class="container" id="entryPage">
-    <h1>🎉 Entrez le prénom de la star du jour 🎉</h1>
-    <input type="text" id="nameInput" placeholder="Prénom ici">
-    <br>
+  <div id="entryPage">
+    <h1>🎂 Entrez votre prénom pour commencer 🎂</h1>
+    <input type="text" id="nameInput" placeholder="Ton prénom ici..." />
     <button onclick="checkName()">Valider</button>
-    <p class="error" id="errorMsg"></p>
+    <p id="errorMsg" style="color: #ffcccc;"></p>
   </div>
 
-  <!-- PAGE 2 : Joyeux anniversaire -->
-  <div class="anniversaire hidden" id="birthdayPage">
-    <!-- GIFs depuis internet -->
-    <img src="https://media.giphy.com/media/3oEjHCWdU7F4B2Pj9K/giphy.gif" class="gif-animation gif-left" alt="Anniv gauche">
-    <img src="https://media.giphy.com/media/l0MYC0LajbaPoEADu/giphy.gif" class="gif-animation gif-right" alt="Anniv droite">
-
-    <h1>🎂 Joyeux Anniversaire 🎂</h1>
-    <div class="message">
-      Pour tes 45 ans d'existence, nous souhaitons que ta journée soit <b>Festive, Lumineuse, Exceptionnelle, Unique</b>.<br><br>
-      Madame FAGBEMI QUENUM, toujours Exigeante, Déterminée, Winneuse (gagnante), Impétueuse mais très aimante, Généreuse, Engagée, véridique et directe (EDWIGE).<br><br>
-      Santé, prospérité, paix du cœur sont nos sincères vœux.<br><br>
-      Joyeux anniversaire à toi, <b>Fleur Edwige Sylvie FAGBEMI QUENUM</b>. 🎂💖
-    </div>
+  <div id="birthdayPage" class="hidden">
+    <h1>🎉 Joyeux anniversaire ! 🎉</h1>
+    <div id="birthdayMessage" style="max-width: 800px; margin: auto; background-color: rgba(0,0,0,0.4); padding: 20px; border-radius: 10px;"></div>
     <button onclick="reset()">↩ Revenir à l'accueil</button>
   </div>
+
+  <audio id="birthdayMusic" src="music.mp3"></audio> <!-- Mets ici ton fichier audio -->
 
   <script>
     function checkName() {
@@ -111,14 +69,21 @@
 
       if (name === "sylvie fleur") {
         music.play().then(() => {
-          // Change le fond d'écran 🎉
           document.body.style.background = "url('photo.jpg') no-repeat center center / cover";
-
-          // Affiche la page anniversaire
           document.getElementById("entryPage").classList.add("hidden");
           document.getElementById("birthdayPage").classList.remove("hidden");
 
-          // Génère des cœurs ❤️
+          // Message d'anniversaire
+          document.getElementById("birthdayMessage").innerHTML = `
+            <p>Pour tes 45 ans d'existence, nous souhaitons que ta journée soit <strong>Festive, Lumineuse, Exceptionnelle, Unique, Rigoureuse</strong> mais très <strong>tendre</strong> à l'intérieur. (FLEUR)</p>
+            <p>Madame FAGBEMI QUENUM, toujours <strong>Exigeante, Déterminée, Winneuse</strong> (gagnante), <strong>Impétueuse</strong> mais très <strong>aimante, Généreuse, Engagée</strong>, véridique et directe (EDWIGE); <strong>Sincère, Yeux brillants de sincérité, Loyale</strong> présence dans chaque moment, <strong>Vive, Inoubliable et Enthousiaste</strong>. (SYLVIE)</p>
+            <p><strong>Santé, prospérité, paix du cœur</strong> sont nos sincères vœux.</p>
+            <p>Que ta journée soit remplie d'avalanches de grâces et de bénédictions.</p>
+            <p><strong>Nous t'aimons très fort</strong>, tes frères et sœurs. <em>Ensemble pour toujours, amis liés.</em></p>
+            <h2>🎂 Joyeux anniversaire à toi, <span style="color:#e91e63;">Fleur Edwige Sylvie FAGBEMI QUENUM</span> 🎂</h2>
+          `;
+
+          // Cœurs animés
           for (let i = 0; i < 50; i++) {
             let heart = document.createElement("div");
             heart.className = "heart";
@@ -138,10 +103,9 @@
     function reset() {
       document.getElementById("birthdayPage").classList.add("hidden");
       document.getElementById("entryPage").classList.remove("hidden");
-      document.body.style.background = "linear-gradient(135deg, #3a7bd5, #00d2ff)"; // remet fond initial
+      document.body.style.background = "linear-gradient(135deg, #3a7bd5, #00d2ff)";
       document.getElementById("errorMsg").textContent = "";
     }
   </script>
 </body>
 </html>
-
