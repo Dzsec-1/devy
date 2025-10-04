@@ -8,7 +8,8 @@
       margin: 0;
       font-family: Arial, sans-serif;
       background: linear-gradient(135deg, #3a7bd5, #00d2ff);
-      overflow: hidden;
+      overflow-x: hidden;
+      color: white;
     }
 
     .hidden { display: none; }
@@ -21,7 +22,11 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      color: white;
+      background: rgba(0,0,0,0.5);
+      padding: 30px;
+      border-radius: 15px;
+      max-width: 400px;
+      margin: auto;
     }
 
     input, button {
@@ -38,16 +43,57 @@
 
     .error { margin-top: 10px; color: #ffdddd; font-style: italic; }
 
-    /* Page photo responsive */
+    /* Page du nom affiché */
+    #namePage {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0,0,0,0.8);
+      flex-direction: column;
+      animation: fadeIn 1s ease-in;
+    }
+    #displayName {
+      font-size: 3rem;
+      font-weight: bold;
+      text-shadow: 2px 2px 10px #ffcc00;
+      opacity: 0;
+      animation: fadeText 2s forwards;
+    }
+
+    /* Page photo */
     #birthdayPage {
       width: 100%;
-      height: 100vh;
-      overflow-y: auto; /* permet le défilement si l’image est grande */
+      min-height: 100vh;
+      text-align: center;
+      background: black;
     }
     #birthdayPage img {
       width: 100%;
       height: auto;
       display: block;
+    }
+    #birthdayPage button {
+      margin: 20px;
+      padding: 12px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 8px;
+      background: #ffcc00;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    #birthdayPage button:hover {
+      background: #ffaa00;
+    }
+
+    @keyframes fadeText {
+      0% { opacity: 0; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
   </style>
 </head>
@@ -64,9 +110,15 @@
     <p class="error" id="errorMsg"></p>
   </div>
 
-  <!-- PAGE 2 -->
+  <!-- PAGE 2 : Nom affiché -->
+  <div class="hidden" id="namePage">
+    <h1 id="displayName"></h1>
+  </div>
+
+  <!-- PAGE 3 : Image + Musique -->
   <div class="hidden" id="birthdayPage">
     <img src="photo.jpg" alt="Anniversaire">
+    <button onclick="reset()">↩ Retour à l’accueil</button>
   </div>
 
   <script>
@@ -75,14 +127,30 @@
       const music = document.getElementById("birthdayMusic");
 
       if (name === "sylvie fleur") {
-        music.play().catch(() => {
-          console.log("L’utilisateur doit cliquer pour autoriser la musique.");
-        });
         document.getElementById("entryPage").classList.add("hidden");
-        document.getElementById("birthdayPage").classList.remove("hidden");
+        document.getElementById("namePage").classList.remove("hidden");
+        document.getElementById("displayName").textContent = "🎉 Joyeux Anniversaire Sylvie Fleur 🎉";
+
+        // Après 3 secondes, on passe à la photo et la musique démarre
+        setTimeout(() => {
+          document.getElementById("namePage").classList.add("hidden");
+          document.getElementById("birthdayPage").classList.remove("hidden");
+          music.play().catch(() => {
+            console.log("Interaction requise pour jouer la musique.");
+          });
+        }, 3000);
+
       } else {
         document.getElementById("errorMsg").textContent = "❌ Mauvais prénom ! Essaie encore 🎂";
       }
+    }
+
+    function reset() {
+      document.getElementById("birthdayPage").classList.add("hidden");
+      document.getElementById("namePage").classList.add("hidden");
+      document.getElementById("entryPage").classList.remove("hidden");
+      document.getElementById("errorMsg").textContent = "";
+      document.getElementById("nameInput").value = "";
     }
   </script>
 </body>
