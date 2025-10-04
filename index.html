@@ -12,9 +12,6 @@
       color: white;
     }
 
-    .hidden { display: none; }
-
-    /* Page d’accueil */
     #entryPage {
       height: 100vh;
       display: flex;
@@ -42,66 +39,10 @@
     button:hover { background: #ffaa00; }
 
     .error { margin-top: 10px; color: #ffdddd; font-style: italic; }
-
-    /* Page du nom affiché */
-    #namePage {
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: rgba(0,0,0,0.8);
-      flex-direction: column;
-      animation: fadeIn 1s ease-in;
-    }
-    #displayName {
-      font-size: 3rem;
-      font-weight: bold;
-      text-shadow: 2px 2px 10px #ffcc00;
-      opacity: 0;
-      animation: fadeText 2s forwards;
-    }
-
-    /* Page photo */
-    #birthdayPage {
-      width: 100%;
-      min-height: 100vh;
-      text-align: center;
-      background: black;
-    }
-    #birthdayPage img {
-      width: 100%;
-      height: auto;
-      display: block;
-    }
-    #birthdayPage button {
-      margin: 20px;
-      padding: 12px 20px;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      background: #ffcc00;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    #birthdayPage button:hover {
-      background: #ffaa00;
-    }
-
-    @keyframes fadeText {
-      0% { opacity: 0; transform: scale(0.8); }
-      100% { opacity: 1; transform: scale(1); }
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
   </style>
 </head>
 <body>
-  <!-- Musique -->
-  <audio id="birthdayMusic" src="musique_anniversaire.mp3" preload="auto" loop></audio> 
-
-  <!-- PAGE 1 -->
+  <!-- PAGE D’ACCUEIL -->
   <div id="entryPage">
     <h1>🎉 Entrez le prénom 🎉</h1>
     <input type="text" id="nameInput" placeholder="Prénom ici">
@@ -110,47 +51,100 @@
     <p class="error" id="errorMsg"></p>
   </div>
 
-  <!-- PAGE 2 : Nom affiché -->
-  <div class="hidden" id="namePage">
-    <h1 id="displayName"></h1>
-  </div>
-
-  <!-- PAGE 3 : Image + Musique -->
-  <div class="hidden" id="birthdayPage">
-    <img src="photo.jpg" alt="Anniversaire">
-    <button onclick="reset()">↩ Retour à l’accueil</button>
-  </div>
-
   <script>
     function checkName() {
       const name = document.getElementById("nameInput").value.trim().toLowerCase();
-      const music = document.getElementById("birthdayMusic");
 
       if (name === "sylvie fleur") {
-        document.getElementById("entryPage").classList.add("hidden");
-        document.getElementById("namePage").classList.remove("hidden");
-        document.getElementById("displayName").textContent = "🎉 Joyeux Anniversaire Sylvie Fleur 🎉";
+        const newPage = `
+          <!DOCTYPE html>
+          <html lang="fr">
+          <head>
+            <meta charset="UTF-8">
+            <title>🎂 Joyeux Anniversaire Sylvie Fleur 🎂</title>
+            <style>
+              body {
+                margin: 0;
+                font-family: 'Comic Sans MS', cursive, sans-serif;
+                background: linear-gradient(180deg, #000000, #1a1a1a, #333333);
+                color: white;
+                text-align: center;
+                overflow-y: auto;
+              }
 
-        // Après 3 secondes, on passe à la photo et la musique démarre
-        setTimeout(() => {
-          document.getElementById("namePage").classList.add("hidden");
-          document.getElementById("birthdayPage").classList.remove("hidden");
-          music.play().catch(() => {
-            console.log("Interaction requise pour jouer la musique.");
-          });
-        }, 3000);
+              #displayName {
+                font-size: 2.8rem;
+                font-weight: bold;
+                text-shadow: 2px 2px 15px #ffcc00;
+                margin-top: 80px;
+                min-height: 100px;
+                white-space: pre-wrap;
+              }
+
+              img {
+                width: 90%;
+                max-width: 800px;
+                border-radius: 20px;
+                box-shadow: 0 0 25px #ffcc00;
+                margin: 40px 0;
+                opacity: 0;
+                transition: opacity 2s ease-in;
+              }
+
+              button {
+                margin-bottom: 50px;
+                padding: 12px 25px;
+                font-size: 16px;
+                border: none;
+                border-radius: 8px;
+                background: #ffcc00;
+                cursor: pointer;
+                font-weight: bold;
+              }
+              button:hover { background: #ffaa00; }
+            </style>
+          </head>
+          <body>
+            <h1 id="displayName"></h1>
+            <img id="birthdayImage" src="photo.jpg" alt="Anniversaire">
+            <button onclick="window.close()">Fermer 🎂</button>
+            <audio id="birthdayMusic" src="musique_anniversaire.mp3" autoplay loop></audio>
+
+            <script>
+              const text = "🎉 Joyeux Anniversaire Sylvie Fleur 🎉";
+              let i = 0;
+              const speed = 100; // vitesse d’écriture (ms)
+              const nameElement = document.getElementById("displayName");
+              const image = document.getElementById("birthdayImage");
+
+              function typeWriter() {
+                if (i < text.length) {
+                  nameElement.textContent += text.charAt(i);
+                  i++;
+                  setTimeout(typeWriter, speed);
+                } else {
+                  // Quand le texte est terminé, on montre l’image
+                  setTimeout(() => {
+                    image.style.opacity = 1;
+                  }, 1000);
+                }
+              }
+
+              // Lancer l’animation après chargement
+              window.onload = typeWriter;
+            <\/script>
+          </body>
+          </html>
+        `;
+
+        // Ouvre dans un nouvel onglet
+        const newTab = window.open();
+        newTab.document.write(newPage);
+        newTab.document.close();
 
       } else {
         document.getElementById("errorMsg").textContent = "❌ Mauvais prénom ! Essaie encore 🎂";
       }
-    }
-
-    function reset() {
-      document.getElementById("birthdayPage").classList.add("hidden");
-      document.getElementById("namePage").classList.add("hidden");
-      document.getElementById("entryPage").classList.remove("hidden");
-      document.getElementById("errorMsg").textContent = "";
-      document.getElementById("nameInput").value = "";
     }
   </script>
 </body>
