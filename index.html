@@ -6,13 +6,15 @@
   <style>
     body {
       margin: 0;
-      padding: 0;
       font-family: Arial, sans-serif;
       background: linear-gradient(135deg, #3a7bd5, #00d2ff);
-      overflow-x: hidden; /* pas de scroll horizontal */
+      overflow-x: hidden;
     }
 
-    .container {
+    .hidden { display: none; }
+
+    /* Page d’accueil */
+    #entryPage {
       height: 100vh;
       display: flex;
       flex-direction: column;
@@ -20,12 +22,11 @@
       align-items: center;
       text-align: center;
       background: rgba(0,0,0,0.5);
-      padding: 40px;
+      padding: 30px;
       border-radius: 15px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
-      max-width: 500px;
-      margin: auto;
       color: white;
+      max-width: 400px;
+      margin: auto;
     }
 
     input, button {
@@ -35,33 +36,26 @@
       border: none;
       margin-top: 10px;
       width: 80%;
-      max-width: 300px;
+      max-width: 250px;
     }
     button { background: #ffcc00; cursor: pointer; font-weight: bold; }
     button:hover { background: #ffaa00; }
 
-    .error { margin-top: 15px; color: #ffdddd; font-style: italic; }
-    .hidden { display: none; }
+    .error { margin-top: 10px; color: #ffdddd; font-style: italic; }
 
-    /* Section photo responsive + scrollable */
+    /* Page photo */
     #birthdayPage {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
+      width: 100%;
       min-height: 100vh;
-      padding: 10px;
+      text-align: center;
     }
     #birthdayPage img {
-      max-width: 100%;
+      width: 100%;
       height: auto;
-      border-radius: 12px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      display: block;
     }
-
-    /* Bouton retour */
     #birthdayPage button {
-      margin-top: 20px;
+      margin: 20px;
       padding: 12px 20px;
       font-size: 16px;
       border: none;
@@ -80,7 +74,7 @@
   <audio id="birthdayMusic" src="musique_anniversaire.mp3" preload="auto" loop></audio> 
 
   <!-- PAGE 1 -->
-  <div class="container" id="entryPage">
+  <div id="entryPage">
     <h1>🎉 Entrez le prénom 🎉</h1>
     <input type="text" id="nameInput" placeholder="Prénom ici">
     <br>
@@ -88,7 +82,7 @@
     <p class="error" id="errorMsg"></p>
   </div>
 
-  <!-- PAGE 2 : Photo responsive + scrollable -->
+  <!-- PAGE 2 -->
   <div class="hidden" id="birthdayPage">
     <img src="photo.jpg" alt="Anniversaire">
     <button onclick="reset()">↩ Retour à l’accueil</button>
@@ -100,10 +94,11 @@
       const music = document.getElementById("birthdayMusic");
 
       if (name === "sylvie fleur") {
-        music.play().then(() => {
-          document.getElementById("entryPage").classList.add("hidden");
-          document.getElementById("birthdayPage").classList.remove("hidden");
+        music.play().catch(() => {
+          console.log("L’utilisateur doit interagir avec la page pour lancer la musique.");
         });
+        document.getElementById("entryPage").classList.add("hidden");
+        document.getElementById("birthdayPage").classList.remove("hidden");
       } else {
         document.getElementById("errorMsg").textContent = "❌ Mauvais prénom ! Essaie encore 🎂";
       }
