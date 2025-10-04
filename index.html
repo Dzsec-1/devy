@@ -8,7 +8,7 @@
       margin: 0;
       font-family: Arial, sans-serif;
       background: linear-gradient(135deg, #3a7bd5, #00d2ff);
-      overflow-x: hidden;
+      overflow: hidden;
     }
 
     .hidden { display: none; }
@@ -21,12 +21,7 @@
       justify-content: center;
       align-items: center;
       text-align: center;
-      background: rgba(0,0,0,0.5);
-      padding: 30px;
-      border-radius: 15px;
       color: white;
-      max-width: 400px;
-      margin: auto;
     }
 
     input, button {
@@ -43,29 +38,16 @@
 
     .error { margin-top: 10px; color: #ffdddd; font-style: italic; }
 
-    /* Page photo */
+    /* Page photo responsive */
     #birthdayPage {
       width: 100%;
-      min-height: 100vh;
-      text-align: center;
+      height: 100vh;
+      overflow-y: auto; /* permet le défilement si l’image est grande */
     }
     #birthdayPage img {
       width: 100%;
       height: auto;
       display: block;
-    }
-    #birthdayPage button {
-      margin: 20px;
-      padding: 12px 20px;
-      font-size: 16px;
-      border: none;
-      border-radius: 8px;
-      background: #ffcc00;
-      cursor: pointer;
-      font-weight: bold;
-    }
-    #birthdayPage button:hover {
-      background: #ffaa00;
     }
   </style>
 </head>
@@ -85,7 +67,6 @@
   <!-- PAGE 2 -->
   <div class="hidden" id="birthdayPage">
     <img src="photo.jpg" alt="Anniversaire">
-    <button onclick="reset()">↩ Retour à l’accueil</button>
   </div>
 
   <script>
@@ -95,19 +76,13 @@
 
       if (name === "sylvie fleur") {
         music.play().catch(() => {
-          console.log("L’utilisateur doit interagir avec la page pour lancer la musique.");
+          console.log("L’utilisateur doit cliquer pour autoriser la musique.");
         });
         document.getElementById("entryPage").classList.add("hidden");
         document.getElementById("birthdayPage").classList.remove("hidden");
       } else {
         document.getElementById("errorMsg").textContent = "❌ Mauvais prénom ! Essaie encore 🎂";
       }
-    }
-
-    function reset() {
-      document.getElementById("birthdayPage").classList.add("hidden");
-      document.getElementById("entryPage").classList.remove("hidden");
-      document.getElementById("errorMsg").textContent = "";
     }
   </script>
 </body>
