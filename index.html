@@ -4,23 +4,53 @@
   <meta charset="UTF-8">
   <title>🎂 Joyeux Anniversaire 🎂</title>
   <style>
-    html, body {
+    body {
       margin: 0;
       padding: 0;
-      height: 100%;
-      width: 100%;
-      overflow: hidden;
-      background-color: black;
+      height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(135deg, #3a7bd5, #00d2ff); /* arrière-plan par défaut */
+      color: white;
+      overflow: hidden;
+      transition: background 1.5s ease-in-out; /* effet doux */
     }
 
-    img {
-      max-width: 100%;
-      max-height: 100%;
-      object-fit: contain; /* affiche toute l'image sans découper */
+    .container, .anniversaire {
+      text-align: center;
+      background: rgba(0,0,0,0.5);
+      padding: 40px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      max-width: 900px;
     }
+
+    input, button {
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: none;
+      margin-top: 10px;
+    }
+    button { background: #ffcc00; cursor: pointer; font-weight: bold; }
+    button:hover { background: #ffaa00; }
+
+    .error { margin-top: 15px; color: #ffdddd; font-style: italic; }
+    .hidden { display: none; }
+
+    h1 { font-size: 3em; margin-bottom: 20px; }
+
+    /* GIFs */
+    .gif-animation {
+      position: absolute;
+      width: 200px;
+      z-index: 10;
+      pointer-events: none;
+    }
+    .gif-left { top: 50px; left: 20px; }
+    .gif-right { bottom: 50px; right: 20px; }
 
     /* Cœurs */
     .heart {
@@ -37,7 +67,6 @@
     }
     .heart::before { top: -50%; left: 0; width: 100%; height: 100%; }
     .heart::after { top: 0; left: 50%; width: 100%; height: 100%; }
-
     @keyframes fall {
       0% { transform: translateY(0) rotate(0deg); opacity: 1; }
       100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
@@ -45,24 +74,83 @@
   </style>
 </head>
 <body>
-  <!-- Image complète -->
-  <img src="3119422f-c0b7-4c41-84ca-785d80b3ed94.png" alt="Photo complète">
+  <!-- Musique continue -->
+  <audio id="birthdayMusic" 
+         src="musique_anniversaire.mp3" 
+         preload="auto" loop></audio> 
 
-  <!-- Musique en boucle -->
-  <audio id="birthdayMusic" src="musique_anniversaire.mp3" preload="auto" autoplay loop></audio>
+  <!-- PAGE 1 : entrée du prénom -->
+  <div class="container" id="entryPage">
+    <h1>🎉 Entrez le prénom de la star du jour 🎉</h1>
+    <input type="text" id="nameInput" placeholder="Prénom ici">
+    <br>
+    <button onclick="checkName()">Valider</button>
+    <p class="error" id="errorMsg"></p>
+  </div>
+
+  <!-- PAGE 2 : Joyeux anniversaire -->
+  <div class="anniversaire hidden" id="birthdayPage">
+    <!-- GIFs depuis internet -->
+    <img src="https://media.giphy.com/media/3oEjHCWdU7F4B2Pj9K/giphy.gif" class="gif-animation gif-left" alt="Anniv gauche">
+    <img src="https://media.giphy.com/media/l0MYC0LajbaPoEADu/giphy.gif" class="gif-animation gif-right" alt="Anniv droite">
+
+    <h1>🎂 Joyeux Anniversaire 🎂</h1>
+    <div class="message">
+      Pour tes 45 ans d'existence, nous souhaitons que ta journée soit 
+      <b>Festive, Lumineuse, Exceptionnelle, Unique, Rigoureuse mais très tendre à l'intérieur.</b> (FLEUR)<br><br>
+
+      Madame FAGBEMI QUENUM, toujours 
+      <b>Exigeante, Déterminée, Winneuse (gagnante), Impétueuse mais très aimante, Généreuse, Engagée, véridique et directe</b> (EDWIGE); 
+      <b>Sincère, Yeux brillants de sincérité, Loyale présence dans chaque moment, Vive, Inoubliable et Enthousiaste.</b> (SYLVIE)<br><br>
+
+      Santé, prospérité, paix du cœur sont nos sincères vœux.<br><br>
+      Que ta journée soit remplie d'avalanches de grâces et de bénédictions.<br><br>
+
+      Nous t'aimons très fort, tes frères et sœurs. Ensemble pour toujours, amis liés.<br><br>
+
+      🎂💖 Joyeux anniversaire à toi, <b>Fleur Edwige Sylvie FAGBEMI QUENUM</b>.
+    </div>
+    <button onclick="reset()">↩ Revenir à l'accueil</button>
+  </div>
 
   <script>
-    // Génère des cœurs ❤
-    for (let i = 0; i < 50; i++) {
-      let heart = document.createElement("div");
-      heart.className = "heart";
-      let size = 10 + Math.random() * 20;
-      heart.style.width = size + "px";
-      heart.style.height = size + "px";
-      heart.style.left = Math.random() * 100 + "vw";
-      heart.style.animationDuration = (3 + Math.random() * 4) + "s";
-      document.body.appendChild(heart);
+    function checkName() {
+      const name = document.getElementById("nameInput").value.trim().toLowerCase();
+      const music = document.getElementById("birthdayMusic");
+
+      if (name === "sylvie fleur") {
+        music.play().then(() => {
+          // Change le fond d'écran 🎉
+          document.body.style.background = "url('photo.jpg') no-repeat center center / cover";
+
+          // Affiche la page anniversaire
+          document.getElementById("entryPage").classList.add("hidden");
+          document.getElementById("birthdayPage").classList.remove("hidden");
+
+          // Génère des cœurs ❤
+          for (let i = 0; i < 50; i++) {
+            let heart = document.createElement("div");
+            heart.className = "heart";
+            let size = 10 + Math.random() * 20;
+            heart.style.width = size + "px";
+            heart.style.height = size + "px";
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = (3 + Math.random() * 4) + "s";
+            document.body.appendChild(heart);
+          }
+        });
+      } else {
+        document.getElementById("errorMsg").textContent = "❌ Mauvais prénom ! Essaie encore 🎂";
+      }
+    }
+
+    function reset() {
+      document.getElementById("birthdayPage").classList.add("hidden");
+      document.getElementById("entryPage").classList.remove("hidden");
+      document.body.style.background = "linear-gradient(135deg, #3a7bd5, #00d2ff)"; // remet fond initial
+      document.getElementById("errorMsg").textContent = "";
     }
   </script>
 </body>
 </html>
+
